@@ -6,6 +6,11 @@ from rest_framework.response import Response
 import pandas as pd
 import numpy as np
 
+from django.http import HttpResponse
+
+def home(request):
+    return HttpResponse("<h1>Welcome to Bookhub</h1>")
+
 class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
@@ -22,12 +27,12 @@ def order_summary(request):
     if df.empty:
         return Response({'message': 'No orders yet'})
 
-    # Lambda usage examples
+    #Lambda usage examples
     book_titles = list(map(lambda order: order['book_id'], orders))
     completed_orders = list(filter(lambda o: o['status'] == 'Completed', orders))
     sorted_by_quantity = sorted(orders, key=lambda o: o['quantity'], reverse=True)
 
-    # 🛠️ Convert Decimal to float before rounding
+    #Convert Decimal to float before rounding
     total_revenue = float(df['total_price'].sum())
     avg_order_value = float(df['total_price'].mean())
     total_quantity = int(df['quantity'].sum())
